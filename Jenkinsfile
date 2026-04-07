@@ -17,8 +17,8 @@ pipeline {
 		stage("Updateing Th tomcati") {
 			steps{
 				sh '''
-					/opt/apache-tomcat-11.0.21/bin/shutdown.sh
-					sleep 3
+				       sudo /opt/apache-tomcat-11.0.21/bin/shutdown.sh
+					sudo sleep 3
 
 					sudo rm -rf /opt/apache-tomcat-11.0.21/webapps/irctc*
 
