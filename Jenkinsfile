@@ -9,7 +9,7 @@ pipeline {
 					echo "Build the war file"
 					pwd
 					mvn clean package
-					'''
+				   '''
 			}
 		}
 	}
