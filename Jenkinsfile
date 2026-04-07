@@ -4,7 +4,7 @@ pipeline {
 		PATH = "/opt/maven/bin:$PATH"
              }
 	stages{
-		stage('Building') {
+		stage('Buildingxx') {
 			steps{
 				sh '''
 					echo "Build the war file"
