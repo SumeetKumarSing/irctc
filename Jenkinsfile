@@ -1,31 +1,39 @@
 pipeline {
-	agent any
-        environment {
-		PATH = "/opt/maven/bin:$PATH"
-             }
-	stages{
-		stage('Buildingxx') {
-			steps{
-				sh '''
-					echo "Build the war file"
-					pwd
-					mvn clean package
-				   '''
-			}
-		}
+    agent any
 
-		stage("Updateing Th tomcati") {
-			steps{
-				sh '''
-				       sudo /opt/apache-tomcat-11.0.21/bin/shutdown.sh
-					sudo sleep 3
+    environment {
+        PATH = "/opt/maven/bin:$PATH"
+    }
 
-					sudo rm -rf /opt/apache-tomcat-11.0.21/webapps/irctc*
+    stages {
 
-					sudo cp /home/ec2-user/ex-slave2/workspace/Pipeline-java-irctc2/target/irctc.war /opt/apache-tomcat-11.0.21/webapps/
-					sudo /opt/apache-tomcat-11.0.21/bin/startup.sh
-				  '''
-			}
-		}	
-	}
-}	
+        stage("buildi in irctc") {
+            steps {
+                echo "----------- build started ----------"
+                sh 'mvn clean deploy -Dmaven.test.skip=true'
+                echo "----------- build completed ----------"
+            }
+        }
+
+        stage("test the irctc code") {
+            steps {
+                echo "----------- unit test started ----------"
+                sh 'mvn surefire-report:report'
+                echo "----------- unit test completed ----------"
+            }
+        }
+
+        stage('SonarQube analysis') {
+            environment {
+                scannerHome = tool 'saidemy-sonar-scanner'
+            }
+
+            steps {
+                withSonarQubeEnv('saidemy-sonarqube-server') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+
+    }
+}
