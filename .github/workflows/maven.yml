@@ -17,3 +17,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - run: mvn clean package # Build step, compiles the code and packages it into a WAR file
+      - name: Upload Jar artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: jar-file
+          path: target/*.jar # Save the generated WAR file from the target directory
